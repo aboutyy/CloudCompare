@@ -45,7 +45,7 @@ public:
 	
 	//! Default constructor
 	ccPickingHub(ccMainAppInterface* app, QObject* parent = nullptr);
-	~ccPickingHub() override = default;
+	virtual ~ccPickingHub() = default;
 
 	//! Returns the number of currently registered listeners
 	inline size_t listenerCount() const { return m_listeners.size(); }

@@ -54,7 +54,8 @@ endif()
 # Plugins need the QT_NO_DEBUG preprocessor in release!
 if( WIN32 )
 	if( NOT CMAKE_CONFIGURATION_TYPES )
-		set_property( TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS QT_NO_DEBUG )
+		# set_property( TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS QT_NO_DEBUG )
+		set_property( TARGET ${PROJECT_NAME} APPEND PROPERTY COMPILE_DEFINITIONS )
 	else()
 		#Anytime we use COMPILE_DEFINITIONS_XXX we must define this policy!
 		#(and setting it outside of the function/file doesn't seem to work...)

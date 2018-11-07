@@ -28,21 +28,21 @@
 //qCC_db
 #include <ccColorScalesManager.h>
 #include <ccFileUtils.h>
-#include <ccPointCloud.h>
 #include <ccScalarField.h>
+#include <ccPointCloud.h>
 
 //Qt
-#include <QColorDialog>
-#include <QFileDialog>
 #include <QHBoxLayout>
-#include <QInputDialog>
+#include <QColorDialog>
 #include <QMessageBox>
+#include <QInputDialog>
+#include <QFileDialog>
 #include <QPlainTextEdit>
 #include <QSettings>
 #include <QUuid>
 
 //System
-#include <cassert>
+#include <assert.h>
 
 static char s_defaultEmptyCustomListText[] = "(auto)";
 
@@ -55,7 +55,7 @@ ccColorScaleEditorDialog::ccColorScaleEditorDialog(	ccColorScalesManager* manage
 	, m_manager(manager)
 	, m_colorScale(currentScale)
 	, m_scaleWidget(new ccColorScaleEditorWidget(this,Qt::Horizontal))
-	, m_associatedSF(nullptr)
+	, m_associatedSF(0)
 	, m_modified(false)
 	, m_minAbsoluteVal(0.0)
 	, m_maxAbsoluteVal(1.0)
@@ -111,6 +111,10 @@ ccColorScaleEditorDialog::ccColorScaleEditorDialog(	ccColorScalesManager* manage
 	setActiveScale(m_colorScale);
 }
 
+ccColorScaleEditorDialog::~ccColorScaleEditorDialog()
+{
+}
+
 void ccColorScaleEditorDialog::setAssociatedScalarField(ccScalarField* sf)
 {
 	m_associatedSF = sf;
@@ -143,7 +147,7 @@ void ccColorScaleEditorDialog::updateMainComboBox()
 	{
 		pos = rampComboBox->findData(m_colorScale->getUuid());
 		if (pos < 0) //the current color scale has disappeared?!
-			m_colorScale = ccColorScale::Shared(nullptr);
+			m_colorScale = ccColorScale::Shared(0);
 	}
 	rampComboBox->setCurrentIndex(pos);
 
@@ -650,7 +654,7 @@ bool ccColorScaleEditorDialog::saveCurrentScale()
 				if (sf->getColorScale() == m_colorScale)
 				{
 					//trick: we unlink then re-link the color scale to update everything automatically
-					sf->setColorScale(ccColorScale::Shared(nullptr));
+					sf->setColorScale(ccColorScale::Shared(0));
 					sf->setColorScale(m_colorScale);
 
 					if (cloud->getCurrentDisplayedScalarField() == sf)

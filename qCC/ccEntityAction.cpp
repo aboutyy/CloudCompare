@@ -2365,9 +2365,14 @@ namespace ccEntityAction
 				continue;
 			}
 			
-			Q_ASSERT(sf->size() != 0);
+			Q_ASSERT(sf->capacity() != 0);
 			
-			if (sf && distrib->computeParameters(*sf))
+			//force SF as 'OUT' field (in case of)
+			const int outSfIdx = pc->getCurrentDisplayedScalarFieldIndex();
+			Q_ASSERT(outSfIdx >= 0);
+			pc->setCurrentOutScalarField(outSfIdx);
+			
+			if (distrib->computeParameters(pc))
 			{
 				QString description;
 				const unsigned precision = ccGui::Parameters().displayedNumPrecision;
@@ -2383,10 +2388,9 @@ namespace ccEntityAction
 					case 1: //WEIBULL
 					{
 						CCLib::WeibullDistribution* weibull = static_cast<CCLib::WeibullDistribution*>(distrib);
-						ScalarType a, b;
-						weibull->getParameters(a, b);
+						ScalarType a,b;
+						weibull->getParameters(a,b);
 						description = QString("a = %1 / b = %2 / shift = %3").arg(a, 0, 'f', precision).arg(b, 0, 'f', precision).arg(weibull->getValueShift(), 0, 'f', precision);
-						ccLog::Print(QString("[Distribution fitting] Additional Weibull distrib. parameters: mode = %1 / skewness = %2").arg(weibull->computeMode()).arg(weibull->computeSkewness()));
 					}
 					break;
 
@@ -2436,10 +2440,10 @@ namespace ccEntityAction
 					unsigned counter = 0;
 					for (unsigned i = 0; i < n; ++i)
 					{
-						ScalarType v = pc->getPointScalarValue(i);
-						if (CCLib::ScalarField::ValidValue(v))
+						ScalarType V = pc->getPointScalarValue(i);
+						if (CCLib::ScalarField::ValidValue(V))
 						{
-							squareSum += static_cast<double>(v) * v;
+							squareSum += static_cast<double>(V)* V;
 							++counter;
 						}
 					}
@@ -2470,7 +2474,7 @@ namespace ccEntityAction
 			}
 			else
 			{
-				ccConsole::Warning(QString("[Entity: %1]-[SF: %2] Couldn't compute distribution parameters!").arg(pc->getName(), sf->getName()));
+				ccConsole::Warning(QString("[Entity: %1]-[SF: %2] Couldn't compute distribution parameters!").arg(pc->getName(),pc->getScalarFieldName(outSfIdx)));
 			}
 		}
 		

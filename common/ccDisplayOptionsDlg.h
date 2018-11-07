@@ -31,7 +31,7 @@
 #include <QDialog>
 
 //system
-#include <cassert>
+#include <assert.h>
 
 #include <ui_displayOptionsDlg.h>
 
@@ -41,8 +41,9 @@ class ccDisplayOptionsDlg : public QDialog, public Ui::DisplayOptionsDlg
 	Q_OBJECT
 
 public:
+
+	//! Default constructor
 	explicit ccDisplayOptionsDlg(QWidget* parent);
-	~ccDisplayOptionsDlg() override = default;
 
 signals:
 	void aspectHasChanged();

@@ -38,38 +38,33 @@ public:
 	//! WeibullDistribution constructor
 	/** Distrubtion parameters can be directly set during object
 		construction.
-		\param a the Weibull a parameter (also known as 'k')
-		\param b the Weibull b parameter (also known as 'lambda')
-		\param valueShift a value shift ('zero')
+		\param _a the Weibull a parameter
+		\param _b the Weibull b parameter
+		\param _valueShift a value shift
 	**/
-	WeibullDistribution(ScalarType a, ScalarType b, ScalarType valueShift = 0);
+	WeibullDistribution(ScalarType _a, ScalarType _b, ScalarType _valueShift = 0);
 
 	//! Returns the distribution parameters
-	/** \param a the Weibull a parameter (also known as 'k')
-		\param b the Weibull b parameter (also known as 'lambda')
-		\return the parameters validity
+	/** \param _a a field to transmit the Weibull a parameter
+		\param _b a field to transmit the Weibull b parameter
+		return the parameters validity
 	**/
-	bool getParameters(ScalarType &a, ScalarType &b) const;
+	bool getParameters(ScalarType &_a, ScalarType &_b) const;
 
 	//! Returns the normal distribution equivalent parameters
-	/** \param mu a field to transmit the equivalent mean
-		\param sigma2 a field to transmit the equivalent variance
-		\return the parameters validity
+	/** \param _mu a field to transmit the equivalent mean
+		\param _sigma2 a field to transmit the equivalent variance
+		return the parameters validity
 	**/
-	bool getOtherParameters(ScalarType &mu, ScalarType &sigma2) const;
-
-	//! Returns the distribution 'mode'
-	double computeMode() const;
-	//! Returns the distribution 'skewness'
-	double computeSkewness() const;
+	bool getOtherParameters(ScalarType &_mu, ScalarType &_sigma2) const;
 
 	//! Sets the distribution parameters
-	/** \param a the Weibull a parameter (also known as 'k')
-		\param b the Weibull b parameter (also known as 'lambda')
-		\param valueShift a value shift ('zero')
-		\return the parameters validity
+	/** \param _a the Weibull a parameter
+		\param _b the Weibull b parameter
+		\param _valueShift a value shift
+		return the parameters validity
 	**/
-	bool setParameters(ScalarType a, ScalarType b, ScalarType valueShift = 0);
+	bool setParameters(ScalarType _a, ScalarType _b, ScalarType _valueShift = 0);
 
 	//! Sets the distribution value shift
 	/** \param vs value shift
@@ -77,10 +72,10 @@ public:
 	void setValueShift(ScalarType vs);
 
 	//! Returns the distribution value shift
-	inline ScalarType getValueShift() const { return m_valueShift; }
+	inline ScalarType getValueShift() const { return valueShift; }
 
 	//inherited methods (see GenericDistribution)
-	bool computeParameters(const ScalarContainer& values) override;
+	bool computeParameters(const GenericCloud* Yk) override;
 	double computeP(ScalarType x) const override;
 	double computePfromZero(ScalarType x) const override;
 	double computeP(ScalarType x1, ScalarType x2) const override;
@@ -104,24 +99,24 @@ protected:
 
 	//! Parameters validity
 	bool parametersDefined;
-	//! Weibull distribution parameter a (k)
-	ScalarType m_a;
-	//! Weibull distribution parameter b (lambda)
-	ScalarType m_b;
+	//! Weibull distribution parameter a
+	ScalarType a;
+	//! Weibull distribution parameter b
+	ScalarType b;
 	//! Weibull distribution parameter 'value shift'
-	ScalarType m_valueShift;
+	ScalarType valueShift;
 
 	//! Normal distribution equivalent parameter: mean
-	ScalarType m_mu;
+	ScalarType mu;
 	//! Normal distribution equivalent parameter: variance
-	ScalarType m_sigma2;
+	ScalarType sigma2;
 
 	//! internal function for parameters evaluation from sample points
 	/** inverseVmax can be optionally specified for overflow-safe version
 	**/
-	ScalarType computeG(const ScalarContainer& values, ScalarType a, ScalarType* inverseVmax = nullptr) const;
+	ScalarType computeG(const GenericCloud* Yk, ScalarType a, ScalarType* inverseVmax = nullptr) const;
 	//! internal function for parameters evaluation from sample points
-	ScalarType findGRoot(const ScalarContainer& values, ScalarType inverseMaxValue) const;
+	ScalarType findGRoot(const GenericCloud* Yk, ScalarType inverseMaxValue) const;
 };
 
 }
